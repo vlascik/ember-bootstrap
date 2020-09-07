@@ -1,9 +1,8 @@
 import { action } from '@ember/object';
-import { tagName } from '@ember-decorators/component';
-import Component from '@ember/component';
-import listenTo from 'ember-bootstrap/utils/cp/listen-to';
-import defaultValue from 'ember-bootstrap/utils/default-decorator';
+import Component from '@glimmer/component';
 import deprecateSubclassing from 'ember-bootstrap/utils/deprecate-subclassing';
+import arg from '../utils/decorators/arg';
+import { localCopy } from 'tracked-toolbox';
 
 /**
   Bootstrap-style [accordion group](http://getbootstrap.com/javascript/#collapse-example-accordion),
@@ -35,10 +34,9 @@ import deprecateSubclassing from 'ember-bootstrap/utils/deprecate-subclassing';
 
   @class Accordion
   @namespace Components
-  @extends Ember.Component
+  @extends Glimmer.Component
   @public
 */
-@tagName('')
 @deprecateSubclassing
 export default class Accordion extends Component {
   /**
@@ -50,15 +48,13 @@ export default class Accordion extends Component {
    * @property selected
    * @public
    */
-  @defaultValue
-  selected = null;
 
   /**
    * @property itemComponent
    * @type {String}
    * @private
    */
-  @defaultValue
+  @arg
   itemComponent = 'bs-accordion/item';
 
   /**
@@ -67,7 +63,7 @@ export default class Accordion extends Component {
    * @property isSelected
    * @private
    */
-  @listenTo('selected')
+  @localCopy('args.selected')
   isSelected;
 
   /**
@@ -81,7 +77,6 @@ export default class Accordion extends Component {
    * @param oldValue
    * @public
    */
-  onChange(newValue, oldValue) {} // eslint-disable-line no-unused-vars
 
   @action
   doChange(newValue) {
@@ -89,8 +84,8 @@ export default class Accordion extends Component {
     if (oldValue === newValue) {
       newValue = null;
     }
-    if (this.onChange(newValue, oldValue) !== false) {
-      this.set('isSelected', newValue);
+    if (this.args.onChange?.(newValue, oldValue) !== false) {
+      this.isSelected = newValue;
     }
   }
 }
