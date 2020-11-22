@@ -61,16 +61,12 @@ export default class ModalFooter extends Component {
    * @default 'primary'
    * @public
    */
-  @defaultValue
-  submitButtonType = 'primary';
 
   /**
    * @property buttonComponent
    * @type {String}
    * @private
    */
-  @defaultValue
-  buttonComponent = 'bs-button';
 
   /**
    * The action to send to the parent modal component when the modal footer's form is submitted

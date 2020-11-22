@@ -1,31 +1,37 @@
-<div class="modal-header" ...attributes>
-  {{#if hasBlockParams}}
-    {{yield
-      (hash
-        title=(bs-default @titleComponent (component "bs-modal/header/title"))
-        close=(component (bs-default @closeComponent (component "bs-modal/header/close")) onClick=@onClose)
-      )
-    }}
-  {{else}}
-    {{#if (macroCondition (macroGetOwnConfig "isBS4"))}}
-      {{#if hasBlock}}
-        {{yield}}
-      {{else}}
-        {{#component (bs-default @titleComponent (component "bs-modal/header/title"))}}{{@title}}{{/component}}
+{{#let
+  (ensure-safe-component (bs-default @titleComponent (component "bs-modal/header/title")))
+  (component (ensure-safe-component (bs-default @closeComponent (component "bs-modal/header/close"))) onClick=@onClose)
+  as |Title Close|
+}}
+  <div class="modal-header" ...attributes>
+    {{#if hasBlockParams}}
+      {{yield
+        (hash
+          title=Title
+          close=Close
+        )
+      }}
+    {{else}}
+      {{#if (macroCondition (macroGetOwnConfig "isBS4"))}}
+        {{#if hasBlock}}
+          {{yield}}
+        {{else}}
+          <Title>{{@title}}</Title>>
+        {{/if}}
+        {{#if this.closeButton}}
+          <Close/>
+        {{/if}}
       {{/if}}
-      {{#if this.closeButton}}
-        {{component (bs-default @closeComponent (component "bs-modal/header/close")) onClick=@onClose}}
+      {{#if (macroCondition (macroGetOwnConfig "isBS3"))}}
+        {{#if this.closeButton}}
+          <Close/>
+        {{/if}}
+        {{#if hasBlock}}
+          {{yield}}
+        {{else}}
+          <Title>{{@title}}</Title>>
+        {{/if}}
       {{/if}}
     {{/if}}
-    {{#if (macroCondition (macroGetOwnConfig "isBS3"))}}
-      {{#if this.closeButton}}
-        {{component (bs-default @closeComponent (component "bs-modal/header/close")) onClick=@onClose}}
-      {{/if}}
-      {{#if hasBlock}}
-        {{yield}}
-      {{else}}
-        {{#component (bs-default @titleComponent (component "bs-modal/header/title"))}}{{@title}}{{/component}}
-      {{/if}}
-    {{/if}}
-  {{/if}}
-</div>
+  </div>
+{{/let}}
